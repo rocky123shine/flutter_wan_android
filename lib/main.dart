@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
         primaryColor: YColors.colorPrimary,
         primaryColorDark: YColors.colorPrimaryDark,
         dividerColor: YColors.dividerColor,
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: YColors.colorAccent),
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: YColors.colorAccent),
       ),
       home: MyHomePage(title: YStrings.appName),
     );
@@ -44,18 +45,16 @@ var pages = <Widget>[
 
 class _MyHomePageState extends State<MyHomePage> {
   int _sellectedIndex = 0;
-  String title = YStrings.appName;
   final _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
       body: PageView.builder(
           controller: _pageController,
           onPageChanged: _pageSelectedChange,
           itemCount: pages.length,
-          physics:const FixedExtentScrollPhysics() ,
+         physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) =>
               pages.elementAt(index)),
       bottomNavigationBar: BottomNavigationBar(
@@ -73,21 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
   _pageSelectedChange(int index) {
     setState(() {
       _sellectedIndex = index;
-      //根据下标修改标题
-      switch (index) {
-        case 0:
-          title = YStrings.appName;
-          break;
-        case 1:
-          title = YStrings.tree;
-          break;
-        case 2:
-          title = YStrings.navi;
-          break;
-        case 3:
-          title = YStrings.project;
-          break;
-      }
     });
   }
 
