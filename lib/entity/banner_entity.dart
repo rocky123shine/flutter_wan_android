@@ -16,6 +16,8 @@ class BannerEntity {
       }
     }
   }
+
+
 }
 
 class BannerData {
