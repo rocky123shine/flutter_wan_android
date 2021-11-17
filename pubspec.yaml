@@ -40,6 +40,9 @@ dependencies:
   # https://github.com/flutterchina/cookie_jar
   cookie_jar: ^3.0.1
   dio_cookie_manager: ^2.0.0  #latest version
+  date_format: ^1.0.9
+  graphql_flutter: ^5.0.0
+  path_provider: ^2.0.5
 
 dev_dependencies:
   flutter_test:

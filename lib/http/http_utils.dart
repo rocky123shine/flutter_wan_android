@@ -9,6 +9,7 @@ class HttpUtils {
   Dio? _dio;
 
   HttpUtils._() {
+
     //BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
     _options = BaseOptions(
       //请求基地址,可以包含子路径
