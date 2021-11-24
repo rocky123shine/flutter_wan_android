@@ -10,14 +10,14 @@ import 'package:flutter_wan_android/http/apollo_utils.dart';
 import 'package:flutter_wan_android/http/http_utils.dart';
 import 'package:flutter_wan_android/res/colors.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget  {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   List<BannerData> bannerDatas = [];
   List<ArticleDataData> articleDatas = [];
 
@@ -123,7 +123,6 @@ class _HomePageState extends State<HomePage> {
 
       //ApolloUtils.instance.query(ApolloService.AAA);
 
-
     } catch (e) {
       print(e);
     }
@@ -161,4 +160,7 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

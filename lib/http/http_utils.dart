@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -9,7 +11,6 @@ class HttpUtils {
   Dio? _dio;
 
   HttpUtils._() {
-
     //BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
     _options = BaseOptions(
       //请求基地址,可以包含子路径
@@ -30,12 +31,11 @@ class HttpUtils {
     );
     _dio = Dio(_options)
       ..interceptors.add(CookieManager(CookieJar()))
-      ..interceptors
-          .add(InterceptorsWrapper(onRequest: (options, handler) {
+      ..interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
         print("请求之前");
         // Do something before request is sent
         return handler.next(options);
-      }, onResponse: ( response, handler) {
+      }, onResponse: (response, handler) {
         print("响应之前");
         // Do something with response data
         if (response != null) {
@@ -69,6 +69,24 @@ class HttpUtils {
       _formatError(e);
     }
     return response;
+  }
+
+  getMap(url, {data, options, cancelToken}) async {
+    Response? response;
+    var jsonRes = "";
+    try {
+      response = await _dio!.get(url,
+          queryParameters: data, options: options, cancelToken: cancelToken);
+      print('get success---------${response.statusCode}');
+      print('get success---------${response.data}');
+    } on DioError catch (e) {
+      print('get error---------$e');
+      _formatError(e);
+    }
+    if (response != null) {
+      jsonRes = json.decode(response.toString());
+    }
+    return jsonRes;
   }
 
   /*

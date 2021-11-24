@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wan_android/pages/gzh_page.dart';
 import 'package:flutter_wan_android/pages/home_page.dart';
-import 'package:flutter_wan_android/pages/navi_page.dart';
+import 'package:flutter_wan_android/pages/mine_page.dart';
 import 'package:flutter_wan_android/pages/project_page.dart';
 import 'package:flutter_wan_android/pages/tree_page.dart';
 import 'package:flutter_wan_android/res/colors.dart';
@@ -39,8 +40,9 @@ class MyHomePage extends StatefulWidget {
 var pages = <Widget>[
   const HomePage(),
   const TreePage(),
-  const NaviPage(),
+  const GzhPage(),
   const ProjectPage(),
+  const MinetPage()
 ];
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -54,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
           controller: _pageController,
           onPageChanged: _pageSelectedChange,
           itemCount: pages.length,
-         physics: const NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (BuildContext context, int index) =>
               pages.elementAt(index)),
       bottomNavigationBar: BottomNavigationBar(
@@ -80,11 +82,13 @@ class _MyHomePageState extends State<MyHomePage> {
       BottomNavigationBarItem(
           icon: const Icon(Icons.home), label: YStrings.home),
       BottomNavigationBarItem(
-          icon: const Icon(Icons.filter_list), label: YStrings.tree),
+          icon: const Icon(Icons.account_tree), label: YStrings.tree),
       BottomNavigationBarItem(
-          icon: const Icon(Icons.low_priority), label: YStrings.navi),
+          icon: const Icon(Icons.speaker_notes_outlined), label: YStrings.gzh),
       BottomNavigationBarItem(
           icon: const Icon(Icons.apps), label: YStrings.project),
+      BottomNavigationBarItem(
+          icon: const Icon(Icons.person_outlined), label: YStrings.mine),
     ];
 
     return list;
