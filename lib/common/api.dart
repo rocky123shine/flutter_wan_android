@@ -22,5 +22,9 @@ class Api {
 
   //项目列表数据
   static const String PROJECT_LIST = "project/list/1/json";
+  //公众号作者
+  static const String GZH = "wxarticle/chapters/json";
+  static const String GZH_ARTICLE_LIST = "wxarticle/list/408/1/json";
+
 
 }
