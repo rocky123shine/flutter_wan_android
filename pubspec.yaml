@@ -49,6 +49,8 @@ dependencies:
   flutter_tag_layout: ^0.0.3
   flutter_html_rich_text: ^1.0.0
   flutter_easyrefresh: ^2.2.1
+  # https://pub.dev/packages/flutter_webview_plugin#-readme-tab
+  flutter_webview_plugin: ^0.4.0
 
 dev_dependencies:
   flutter_test:
