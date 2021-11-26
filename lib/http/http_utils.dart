@@ -70,25 +70,6 @@ class HttpUtils {
     }
     return response;
   }
-
-  getMap(url, {data, options, cancelToken}) async {
-    Response? response;
-    var jsonRes = "";
-    try {
-      response = await _dio!.get(url,
-          queryParameters: data, options: options, cancelToken: cancelToken);
-      print('get success---------${response.statusCode}');
-      print('get success---------${response.data}');
-    } on DioError catch (e) {
-      print('get error---------$e');
-      _formatError(e);
-    }
-    if (response != null) {
-      jsonRes = json.decode(response.toString());
-    }
-    return jsonRes;
-  }
-
   /*
    * post请求
    */
@@ -99,10 +80,10 @@ class HttpUtils {
           queryParameters: data, options: options, cancelToken: cancelToken);
       print('post success---------${response.data}');
     } on DioError catch (e) {
-      print('post error---------$e');
+      print('post error---------${e.stackTrace}');
       _formatError(e);
     }
-    return response?.data;
+    return response;
   }
 
   void _formatError(DioError e) {

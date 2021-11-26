@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wan_android/common/api.dart';
 import 'package:flutter_wan_android/entity/navi_entity.dart';
 import 'package:flutter_wan_android/http/http_utils.dart';
+import 'package:flutter_wan_android/pages/web.dart';
 import 'package:flutter_wan_android/res/colors.dart';
 
 class NaviPage extends StatefulWidget {
@@ -79,12 +80,12 @@ class _NaviPageState extends State<NaviPage>
   Color textColor = YColors.colorPrimary; //字体颜色
 
   Widget getRow(int i) {
-    return new GestureDetector(
-      child: new Container(
+    return GestureDetector(
+      child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         color: index == i ? YColors.color_F9F9F9 : Colors.white,
-        child: new Text(_datas![i].name ?? "",
+        child: Text(_datas![i].name ?? "",
             style: TextStyle(
                 color: index == i ? textColor : YColors.color_666,
                 fontWeight: index == i ? FontWeight.w600 : FontWeight.w400,
@@ -112,16 +113,16 @@ class _NaviPageState extends State<NaviPage>
           return ActionChip(
             //标签文字
             label: Text(articles?[index].title ?? "",
-                style: TextStyle(fontSize: 16, color: YColors.color_666)),
+                style: const TextStyle(fontSize: 16, color: YColors.color_666)),
             //点击事件
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   new MaterialPageRoute(
-              //       builder: (context) =>  ArticleDetail(
-              //           title: articles[index].title,
-              //           url: articles[index].link)),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebPage(
+                       articles?[index].link??"",title:articles?[index].title??"",),
+                ),
+              );
             },
             elevation: 3,
             backgroundColor: Colors.grey.shade200,

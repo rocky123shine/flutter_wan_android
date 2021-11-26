@@ -5,6 +5,7 @@ import 'package:flutter_tag_layout/flutter_tag_layout.dart';
 import 'package:flutter_wan_android/common/api.dart';
 import 'package:flutter_wan_android/entity/tree_entity.dart';
 import 'package:flutter_wan_android/http/http_utils.dart';
+import 'package:flutter_wan_android/pages/search_page.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class SysPage extends StatefulWidget {
@@ -71,7 +72,9 @@ class SysPageState extends State<SysPage> with AutomaticKeepAliveClientMixin {
       for (int i = 0; i < children.length; i++) {
         list.add(
           InkWell(
-            onTap: (){},
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage(keyWords:  "${children[i].name}",)));
+            },
             child: TextTagWidget(
               "${children[i].name}",
               padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),

@@ -1,9 +1,7 @@
-
 class Api {
-
   static const String BASE_URL = "https://www.wanandroid.com/";
 
-  static const String TEST_URL = "https://api.hencoder.com/author";
+  static const String TEST_URL = "https://api.hencoder.com/author/";
 
   //首页banner
   static const String BANNER = "banner/json";
@@ -22,9 +20,17 @@ class Api {
 
   //项目列表数据
   static const String PROJECT_LIST = "project/list/1/json";
+
   //公众号作者
   static const String GZH = "wxarticle/chapters/json";
   static const String GZH_ARTICLE_LIST = "wxarticle/list/408/1/json";
 
+  static const String GET_HOT_SEARCH = "hotkey/json";
 
+  /**
+   * post
+   *  @Path("pageNum") pageNum: Int,
+      @Field("k") keywords: String
+   */
+  static const String SEARCH = "article/query/{pageNum}/json";
 }

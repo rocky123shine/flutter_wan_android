@@ -8,16 +8,18 @@ import 'package:flutter_wan_android/entity/article_entity.dart';
 import 'package:flutter_wan_android/entity/banner_entity.dart';
 import 'package:flutter_wan_android/http/apollo_utils.dart';
 import 'package:flutter_wan_android/http/http_utils.dart';
+import 'package:flutter_wan_android/pages/search_page.dart';
 import 'package:flutter_wan_android/res/colors.dart';
 
-class HomePage extends StatefulWidget  {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   List<BannerData> bannerDatas = [];
   List<ArticleDataData> articleDatas = [];
 
@@ -26,7 +28,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     super.initState();
     //进来就做网络请求 拉取数据
     _getHttpData();
-
   }
 
   @override
@@ -34,71 +35,83 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-         SliverAppBar(
-          pinned: true,
-          snap:false,
-          floating: false,
-          //leading: Icon(Icons.home),
-         //actions: const <Widget>[Icon(Icons.search)],
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text("首页"),
-              Icon(Icons.search)
-            ],
+          SliverAppBar(
+            pinned: true,
+            snap: false,
+            floating: false,
+            //leading: Icon(Icons.home),
+            //actions: const <Widget>[Icon(Icons.search)],
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("首页"),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                          keyWords: "keyWords",
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Icon(
+                    Icons.search,
+                    size: 34,
+                  ),
+                )
+              ],
+            ),
+            expandedHeight: 180,
+            flexibleSpace: FlexibleSpaceBar(
+              background: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width / 1.8 * 0.8,
+                child: Swiper(
+                  key: UniqueKey(),
+                  itemCount: bannerDatas.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Image.network(
+                      bannerDatas[index].imagePath,
+                      fit: BoxFit.fill,
+                    );
+                  },
+                  autoplay: true,
+                  autoplayDelay: 3000,
+                  //触发时是否停止播放
+                  autoplayDisableOnInteraction: true,
+                  duration: 600,
+                  //默认分页按钮
+                  // control: const SwiperControl(),
+                  //默认指示器
+                  pagination: const SwiperPagination(
+                    // SwiperPagination.fraction 数字1/5，默认点
+                    builder: DotSwiperPaginationBuilder(
+                        size: 6,
+                        activeSize: 8,
+                        activeColor: Colors.red,
+                        color: Colors.grey),
+                  ),
+
+                  //视图宽度，即显示的item的宽度屏占比,
+                  // viewportFraction: 0.8,
+                  //两侧item的缩放比
+                  // scale: 0.9,
+
+                  onTap: (int index) {
+                    //点击事件，返回下标
+                    print("index-----" + index.toString());
+                  },
+                ),
+              ),
+            ),
           ),
-          expandedHeight: 180,
-           flexibleSpace: FlexibleSpaceBar(
-             background: SizedBox(
-               width: MediaQuery.of(context).size.width,
-               height: MediaQuery.of(context).size.width / 1.8 * 0.8,
-               child: Swiper(
-                 key: UniqueKey(),
-                 itemCount: bannerDatas.length,
-                 itemBuilder: (BuildContext context, int index) {
-                   return Image.network(
-                     bannerDatas[index].imagePath,
-                     fit: BoxFit.fill,
-                   );
-                 },
-                 autoplay: true,
-                 autoplayDelay: 3000,
-                 //触发时是否停止播放
-                 autoplayDisableOnInteraction: true,
-                 duration: 600,
-                 //默认分页按钮
-                 // control: const SwiperControl(),
-                 //默认指示器
-                 pagination: const SwiperPagination(
-                   // SwiperPagination.fraction 数字1/5，默认点
-                   builder: DotSwiperPaginationBuilder(
-                       size: 6,
-                       activeSize: 8,
-                       activeColor: Colors.red,
-                       color: Colors.grey),
-                 ),
-
-                 //视图宽度，即显示的item的宽度屏占比,
-                 // viewportFraction: 0.8,
-                 //两侧item的缩放比
-                 // scale: 0.9,
-
-                 onTap: (int index) {
-                   //点击事件，返回下标
-                   print("index-----" + index.toString());
-                 },
-               ),
-             ),
-           ),
-         ),
-         SliverList(
-           delegate: SliverChildBuilderDelegate(
-               (context,index){
-                 return _getRow(index);
-               },
-             childCount: articleDatas.length
-           ),
-         ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return _getRow(index);
+            }, childCount: articleDatas.length),
+          ),
         ],
       ),
     );
