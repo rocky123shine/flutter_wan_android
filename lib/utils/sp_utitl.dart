@@ -9,18 +9,19 @@ class SpUtils {
   SharedPreferences? _sp;
 
   SpUtils._() {
-    _sp = _initSp();
+    _initSp();
   }
 
-  static get instance => getInstance();
+  static SpUtils get instance => getInstance();
 
-  static getInstance() {
+  static SpUtils getInstance() {
     _utils ??= SpUtils._();
-    return _utils;
+    return _utils!;
   }
 
   _initSp() async {
-    return await SharedPreferences.getInstance();
+    var sp = await SharedPreferences.getInstance();
+    _sp = sp;
   }
 
   putString(String K, String V) async {
@@ -43,7 +44,18 @@ class SpUtils {
     _sp!.setStringList(K, V);
   }
 
-  getValue(String K) {
-    return _sp!.get(K);
+  getValue(String K) async {
+    if (_sp == null) {
+      await _initSp();
+    }
+
+    return await _sp!.get(K);
+  }
+
+   getStringList(String key) async {
+    if (_sp == null) {
+      await _initSp();
+    }
+    return   _sp!.getStringList(key) ?? [];
   }
 }

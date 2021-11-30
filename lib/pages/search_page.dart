@@ -7,12 +7,14 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_html_rich_text/flutter_html_rich_text.dart';
 import 'package:flutter_tag_layout/flutter_tag_layout.dart';
 import 'package:flutter_wan_android/common/api.dart';
+import 'package:flutter_wan_android/common/common_var.dart';
 import 'package:flutter_wan_android/entity/article_entity.dart';
 import 'package:flutter_wan_android/entity/hot_search_entity.dart';
 import 'package:flutter_wan_android/entity/search_entity.dart';
 import 'package:flutter_wan_android/http/http_utils.dart';
 import 'package:flutter_wan_android/pages/web.dart';
 import 'package:flutter_wan_android/res/colors.dart';
+import 'package:flutter_wan_android/utils/sp_utitl.dart';
 
 class SearchPage extends StatefulWidget {
   String? keyWords = "";
@@ -30,6 +32,7 @@ class SearchPageState extends State<SearchPage> {
   List<ArticleDataData> datas = [];
   List<HotSearchData> hotSearchDatas = [];
   late TextEditingController _searchController;
+  List<String> history = [];
 
   @override
   void initState() {
@@ -37,6 +40,10 @@ class SearchPageState extends State<SearchPage> {
     editWidgetNull = (widget.keyWords == "keyWords");
     refreshController = EasyRefreshController();
     _searchController = TextEditingController();
+    _searchController.addListener(() {
+      _searchController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _searchController.text.length));
+    });
     _getHttp();
   }
 
@@ -77,31 +84,102 @@ class SearchPageState extends State<SearchPage> {
       return Padding(
         padding: const EdgeInsets.only(left: 16, right: 16),
         child: Row(
-          //mainAxisSize: MainAxisSize.max,
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
           textDirection: TextDirection.rtl,
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                if (!history.contains(_searchController.text)) {
+                  while (history.length >= 10) {
+                    history.removeLast();
+                  }
+                  history.insert(0, _searchController.text);
+                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(
+                      keyWords: _searchController.text,
+                    ),
+                  ),
+                );
+              },
               child: const Icon(
                 Icons.search,
                 size: 28,
               ),
             ),
-           SizedBox(
-             width: 260,
-             child:  TextField(
-               decoration: const InputDecoration(hintText: "请输入关键词"),
-               // 绑定控制器
-               controller: _searchController,
-               // 输入改变以后的事件
-               onChanged: (value) {
-                 setState(() {
-                   _searchController.text = value;
-                 });
-               },
-             ),
-           ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 152,
+              height: 34,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: TextField(
+                  textAlignVertical: TextAlignVertical.center,
+                  // 对其 微调TextStyle的height 和 contentPadding
+                  style: const TextStyle(
+                      height: 1.4, fontSize: 14, color: YColors.color_fff),
+                  decoration: InputDecoration(
+                    hintStyle: const TextStyle(color: YColors.color_fff),
+                    counterText: "",
+                    //contentPadding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    fillColor: YColors.color_fff,
+                    hintText: "请输入关键词",
+                    //suffixIcon: Icon(Icons.close),
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: YColors.color_fff),
+                    ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: YColors.color_fff),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: YColors.color_fff),
+                    ),
+                    suffix: InkWell(
+                      child: const Icon(
+                        Icons.close,
+                        size: 14,
+                        color: YColors.color_fff,
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        _searchController.clear();
+                      },
+                    ),
+                  ),
+                  cursorColor: YColors.color_fff,
+                  cursorWidth: 2,
+                  // 绑定控制器
+                  controller: _searchController,
+                  textInputAction: TextInputAction.search,
+                  // 输入改变以后的事件
+                  onChanged: (value) {
+                    setState(() {
+                      _searchController.text = value;
+                    });
+                  },
+                  onSubmitted: (v) {
+                    if (!history.contains(v)) {
+                      while (history.length >= 10) {
+                        history.removeLast();
+                      }
+                      history.insert(0, v);
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchPage(
+                          keyWords: v,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -158,6 +236,30 @@ class SearchPageState extends State<SearchPage> {
                     fontSize: 16),
               ),
             ],
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width - 32,
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 0, right: 0, top: 8, bottom: 8),
+              child: Wrap(
+                children: history
+                    .map((e) => InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchPage(
+                                          keyWords: e,
+                                        )));
+                          },
+                          child: TextTagWidget(
+                            e,
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
           ),
           Row(
             children: const [
@@ -260,8 +362,11 @@ class SearchPageState extends State<SearchPage> {
       var res = await HttpUtils.instance.get(Api.GET_HOT_SEARCH);
       var map = json.decode(res.toString());
       var entity = HotSearchEntity.fromJson(map);
+      var historyList =
+          await SpUtils.instance.getStringList(CommonVar.SEARCH_GISTORY);
       setState(() {
         hotSearchDatas = entity.data ?? [];
+        history = historyList;
       });
     } else {
       //查询数据
@@ -276,5 +381,12 @@ class SearchPageState extends State<SearchPage> {
         datas = searchEntity.data?.datas ?? [];
       });
     }
+  }
+
+  @override
+  void deactivate() {
+    SpUtils.instance.putStringList(CommonVar.SEARCH_GISTORY, history);
+
+    super.deactivate();
   }
 }

@@ -55,6 +55,10 @@ dependencies:
   shared_preferences: ^0.5.0
   #添加Sqflite依赖
   sqflite: ^1.0.0
+  image_picker: ^0.8.4+4
+  #image_crop: ^0.2.1
+  permission_handler: any
+
 
 
 dev_dependencies:

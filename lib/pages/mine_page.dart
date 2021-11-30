@@ -1,5 +1,6 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_wan_android/pages/person_info_page.dart';
 import 'package:flutter_wan_android/res/colors.dart';
 
 class MinetPage extends StatelessWidget {
@@ -14,7 +15,14 @@ class MinetPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PersonInfoPage(),
+                  ),
+                );
+              },
               child: const Icon(Icons.settings),
             )
           ],
